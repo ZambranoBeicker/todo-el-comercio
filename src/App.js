@@ -18,7 +18,11 @@ function App() {
         <button
           onClick={(event) => {
             if (inputRef.current.value !== "") {
-              setValueList([...valueList, inputRef.current.value]);
+              const newCard = {
+                value: inputRef.current.value,
+                id: `${inputRef.current.value} ${new Date().getTime()}`,
+              };
+              setValueList([...valueList, newCard]);
             }
             inputRef.current.value = "";
           }}
@@ -38,9 +42,16 @@ function App() {
             <p>There are no tasks!</p>
           </div>
         ) : (
-          valueList.map((value, index) => (
-            <Fragment key={index}>
-              <TaskCard title={value} />
+          valueList.map(({ value, id }) => (
+            <Fragment key={id}>
+              <TaskCard
+                title={value}
+                id={id}
+                onDelete={(id) => {
+                  const list = valueList.filter((item) => item.id !== id);
+                  setValueList(list);
+                }}
+              />
             </Fragment>
           ))
         )}

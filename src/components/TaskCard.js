@@ -1,6 +1,13 @@
-export default function TaskCard({ title }) {
+import { useState } from "react";
+
+export default function TaskCard({ title, onDelete, id }) {
+  const [deleted, setDeleted] = useState(false);
   return (
-    <div className="appear grid grid-cols-6 border-t pt-5 px-3 pb-0 mt-3 text-center md:flex md:justify-between">
+    <div
+      className={`${
+        deleted ? "leave" : "appear"
+      } grid grid-cols-6 border-t pt-5 px-3 pb-0 mt-3 text-center md:flex md:justify-between`}
+    >
       <div className="text-left col-span-4">
         <p>{title}</p>
       </div>
@@ -14,6 +21,12 @@ export default function TaskCard({ title }) {
           src="./trash.svg"
           alt="Delete icon"
           className="w-full mr-2 h-auto bg-icons p-2 rounded-md cursor-pointer"
+          onClick={() => {
+            setDeleted(true);
+            setTimeout(() => {
+              onDelete(id);
+            }, 200);
+          }}
         />
       </div>
     </div>
