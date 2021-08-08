@@ -1,31 +1,36 @@
 import { Fragment, useState, useRef } from "react";
 import TaskCard from "./components/TaskCard";
+import Input from "./components/Input";
 
 function App() {
   const [valueList, setValueList] = useState([]);
   const inputRef = useRef();
 
+  const confirmHandler = (newValue, id) => {
+    const previousList = [...valueList];
+    const object = previousList.find((item) => item.id === id);
+    previousList[previousList.indexOf(object)].value = newValue;
+    setValueList([...previousList]);
+  };
+
+  const clickHandler = (event) => {
+    if (inputRef.current.value !== "") {
+      const newCard = {
+        value: inputRef.current.value,
+        id: `${inputRef.current.value} ${new Date().getTime()}`,
+      };
+      setValueList([...valueList, newCard]);
+    }
+    inputRef.current.value = "";
+  };
+
   return (
     <div className="container px-3 py-8 ">
       <div className="md:flex">
-        <input
-          ref={inputRef}
-          type="text"
-          placeholder="Agrega el tema a revisar..."
-          className="w-full mb-5 block border px-3 py-2 rounded-md md:w-8/12 md:mb-0 md:mr-7 md:px-5"
-        />
+        <Input inputRef={inputRef} />
 
         <button
-          onClick={(event) => {
-            if (inputRef.current.value !== "") {
-              const newCard = {
-                value: inputRef.current.value,
-                id: `${inputRef.current.value} ${new Date().getTime()}`,
-              };
-              setValueList([...valueList, newCard]);
-            }
-            inputRef.current.value = "";
-          }}
+          onClick={clickHandler}
           className="w-full bg-blue-500 flex justify-center p-2 rounded-md text-white md:w-4/12"
         >
           <img src="./plus-circle.svg" alt="Add icon" className="mr-2 w-6" />
@@ -45,12 +50,13 @@ function App() {
           valueList.map(({ value, id }) => (
             <Fragment key={id}>
               <TaskCard
-                title={value}
-                id={id}
+                info={{ title: value, id: id }}
+                inputRef={inputRef}
                 onDelete={(id) => {
                   const list = valueList.filter((item) => item.id !== id);
                   setValueList(list);
                 }}
+                onConfirm={confirmHandler}
               />
             </Fragment>
           ))

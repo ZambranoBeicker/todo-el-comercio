@@ -27,10 +27,10 @@ body{
 }
 
 .appear{
-	animation:fade-in .2s;
+	animation:fade-in .2s forwards;
 }
 .leave{
-	animation:fade-out .2s;
+	animation:fade-out .2s forwards;
 }
 
 @keyframes fade-in {
@@ -50,6 +50,5 @@ body{
 
 	to{
 		opacity: 0;
-		height: 0;
 	}
 }
